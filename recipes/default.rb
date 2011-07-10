@@ -39,8 +39,8 @@ if ['util'].include?(node[:instance_role])
 
   ["/var/log/elasticsearch", "/var/lib/elasticsearch", "/var/run/elasticsearch"].each do |dir|
     directory dir do
-      owner "elasticsearch"
-      group "nogroup"
+      owner "root"
+      group "root"
       mode 0755
     end
   end
