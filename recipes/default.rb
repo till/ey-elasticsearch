@@ -18,6 +18,7 @@ if ['util'].include?(node[:instance_role])
       source "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{node[:elasticsearch_version]}.zip"
       mode "0644"
       checksum node[:elasticsearch_checksum]
+      not_if { File.exists?("/tmp/elasticsearch-#{node[:elasticsearch_version]}.zip") }
     end
 
     user "elasticsearch" do
@@ -139,8 +140,30 @@ if ['util'].include?(node[:instance_role])
       mode 0644
     end
 
+    # Tell monit to just reload, if elasticsearch is not running start it.  If it is monit will do nothing.
     execute "monit reload" do
       command "monit reload"
     end
+  end
+end
+
+# This portion of the recipe should run on all instances in your environment.  We are going to drop elasticsearch.yml for you so you can parse it and provide the instances to your application.
+
+node['utility_instances'].each do |elasticsearch|
+  if elasticsearch['name'].include?("elasticsearch_")
+    elasticsearch_hosts << "#{elasticsearch['hostname']}:9200"
+  end
+end
+
+node.engineyard.apps.each do |app|
+  template "/data/#{app.name}/shared/config/elasticsearch.yml" do
+    owner node[:owner_name]
+    group node[:owner_name]
+    mode 0660
+    source "es.yml.erb"
+    backup 0
+    variables(:yaml_file => {
+      node.engineyard.environment.framework_env => { 
+      :hosts => elasticsearch_hosts} })
   end
 end
