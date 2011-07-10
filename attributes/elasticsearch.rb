@@ -1,5 +1,5 @@
 elasticsearch_version("0.16.3")
-elasticsearch_checksum("b514852560dc0be1cb5c3abe6ed13fee"
+elasticsearch_checksum("b514852560dc0be1cb5c3abe6ed13fee")
 elasticsearch_clustername("#{@attribute[:environment][:name]}")
 elasticsearch_home("/data/elasticsearch")
 elasticsearch_s3_gateway_bucket("elasticsearch_#{@attribute[:environment][:name]}")
