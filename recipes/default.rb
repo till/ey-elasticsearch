@@ -24,6 +24,13 @@ if ['util'].include?(node[:instance_role])
   gid "nogroup"
   end
 
+  # Update JAVA as the Java on the AMI can sometimes crash
+  #
+  package "dev-java/sun-jdk" do
+    version "1.6.0.26"
+    action :upgrade
+  end
+
   directory "/usr/lib/elasticsearch-#{node[:elasticsearch_version]}" do
     owner "root"
     group "root"
@@ -86,10 +93,14 @@ if ['util'].include?(node[:instance_role])
     mode 0755
   end
 
+  max_mem = ((node[:memory][:total].to_i / 1024 * 0.75)).to_i.to_s + "m"
   template "/usr/share/elasticsearch/elasticsearch.in.sh" do
     source "elasticsearch.in.sh.erb"
     mode 0644
     backup 0
+    variables(
+      :es_max_mem => max_mem
+    )
   end
 
   # include_recipe "elasticsearch::s3_bucket"
