@@ -92,7 +92,7 @@ if ['util'].include?(node[:instance_role])
     backup 0
   end
 
-  include_recipe "elasticsearch::s3_bucket"
+  # include_recipe "elasticsearch::s3_bucket"
 
   template "/usr/lib/elasticsearch-#{node[:elasticsearch_version]}/config/elasticsearch.yml" do
     source "elasticsearch.yml.erb"

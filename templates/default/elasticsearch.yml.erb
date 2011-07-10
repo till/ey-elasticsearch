@@ -1,8 +1,3 @@
-cloud: 
-  account: <%= @aws_access_id %>
-  key: <%= @aws_access_key %>
-  type: amazon
-
 path:
   work: /var/lib/elasticsearch/work
   logs: /var/log/elasticsearch
@@ -18,12 +13,6 @@ discovery:
       unicast:
       enabled: true
       hosts: <%= @elasticsearch_instances %>
-
-gateway:
-  type: cloud
-  cloud:
-    container: <%= @elasticsearch_s3_gateway_bucket %>
-    chunk_size: 1g # workaround for bug where chunk size is limited to 2g but default is 4g
 
 index:
   number_of_shards: <%= @elasticsearch_defaultshards %>
