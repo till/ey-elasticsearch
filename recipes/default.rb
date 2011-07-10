@@ -75,7 +75,15 @@ if ['util'].include?(node[:instance_role])
     mode 0755
   end
 
-  mount "/var/lib/elasticsearch" do
+  directory "/usr/lib/elasticsearch-#{node[:elasticsearch_version]}/data" do
+    owner "root"
+    group "root"
+    mode 0755
+    action :create
+    recursive true
+  end
+
+  mount "/usr/lib/elasticsearch-#{node[:elasticsearch_version]}/data" do
     device "#{node[:elasticsearch_home]}"
     fstype "none"
     options "bind,rw"
@@ -99,7 +107,7 @@ if ['util'].include?(node[:instance_role])
     mode 0644
     backup 0
     variables(
-      :es_max_mem => max_mem
+      :es_max_mem => ((node[:memory][:total].to_i / 1024 * 0.75)).to_i.to_s + "m"
     )
   end
 
@@ -122,6 +130,12 @@ if ['util'].include?(node[:instance_role])
     backup 0
   end
   end
+end
+execute "start elasticsearch" do
+  cwd "/usr/lib/elasticsearch-#{node[:elasticsearch_version]}/bin"
+  command "/usr/lib/elasticsearch-#{node[:elasticsearch_version]}/bin/elasticsearch;true"
+  not_if { File.exists?("/usr/lib/elasticsearch-#{node[:elasticsearch_version]}/data/#{node[:elasticsearch_clustername]}/nodes/0/node.lock") }
+  # NO I AM NOT SURE THIS IS RIGHT? GOT A BETTER IDEA?
 end
 
 #template "/etc/monit.d/elasticsearch_#{node[:elasticsearch_clustername]}" do
