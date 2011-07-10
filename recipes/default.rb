@@ -148,22 +148,22 @@ if ['util'].include?(node[:instance_role])
 end
 
 # This portion of the recipe should run on all instances in your environment.  We are going to drop elasticsearch.yml for you so you can parse it and provide the instances to your application.
-
+elasticsearch_hosts = []
 node['utility_instances'].each do |elasticsearch|
   if elasticsearch['name'].include?("elasticsearch_")
     elasticsearch_hosts << "#{elasticsearch['hostname']}:9200"
   end
-end
 
-node.engineyard.apps.each do |app|
-  template "/data/#{app.name}/shared/config/elasticsearch.yml" do
-    owner node[:owner_name]
-    group node[:owner_name]
-    mode 0660
-    source "es.yml.erb"
-    backup 0
-    variables(:yaml_file => {
-      node.engineyard.environment.framework_env => { 
-      :hosts => elasticsearch_hosts} })
+  node.engineyard.apps.each do |app|
+    template "/data/#{app.name}/shared/config/elasticsearch.yml" do
+      owner node[:owner_name]
+      group node[:owner_name]
+      mode 0660
+      source "es.yml.erb"
+      backup 0
+      variables(:yaml_file => {
+        node.engineyard.environment.framework_env => { 
+        :hosts => elasticsearch_hosts} })
+    end
   end
 end
