@@ -19,7 +19,7 @@ Using it
 
   * Somehow get the cookcookb provided in this git repo as a cookbook called 'elasticsearch' in your local ey-cloud-recipes fork.  Submodules work, so do other methods.
 
-``require_recipe "mongodb"``  
+``require_recipe "elasticsearch"``  
 
   * Upload recipes to your environment
 
