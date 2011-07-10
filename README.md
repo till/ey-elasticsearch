@@ -12,7 +12,7 @@ So, we build a web site or an application and want to add search to it, and then
 Dependencies
 --------
 
-  * Your application should have a gem such as [rubberband][3] to talk to Elastic Search directly.  
+  * Your application should use gems(s) such as [tire][5],[rubberband][3],[elastic_searchable][6] or lastly for JRuby users there is [jruby-elasticsearch][4].
 
 Using it
 --------
@@ -53,3 +53,6 @@ issue and submit a pull request.
 [1]: http://lucene.apache.org/
 [2]: http://www.elasticsearch.org/
 [3]: https://github.com/grantr/rubberband
+[4]: https://github.com/jordansissel/jruby-elasticsearch/
+[5]: https://github.com/karmi/tire
+[6]: https://github.com/wireframe/elastic_searchable/
